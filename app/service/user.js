@@ -12,17 +12,24 @@ class UserServer extends Server {
       return false
     }
     const token = app.jwt.sign({ username }, app.config.jwt.secret)
-    return token
+    return {
+      token,
+      username
+    }
   }
   async registryValidate() {
     const { ctx, app } = this
-    const { username, password } = ctx.request.body
+    const { username, password, cpassword } = ctx.request.body
     const token = app.jwt.sign({ username }, app.config.jwt.secret)
     const crypto = require('crypto')
     // 验证是否已经存在该用户
     const UserModel = ctx.model.User
     const existUser = await UserModel.findOne({ username })
     if (existUser) {
+      return false
+    }
+
+    if (password !== cpassword) {
       return false
     }
 
@@ -33,7 +40,10 @@ class UserServer extends Server {
       userId: 10000
     })
     await newUser.save()
-    return token
+    return {
+      token,
+      username
+    }
   }
 }
 

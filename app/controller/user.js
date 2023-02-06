@@ -13,7 +13,7 @@ class UserController extends Controller {
       ctx.body = {
         code: 200,
         msg: '登录成功',
-        token: res
+        data: res
       }
     } else {
       ctx.body = {
@@ -31,7 +31,7 @@ class UserController extends Controller {
       ctx.body = {
         code: 200,
         msg: '创建成功',
-        token: res
+        data: res
       }
     } else {
       ctx.body = {
