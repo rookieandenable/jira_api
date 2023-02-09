@@ -23,4 +23,19 @@ module.exports = app => {
   router.post('/list/delete', controller.home.deleteProject)
   // 修改收藏
   router.post('/list/collection', controller.home.modifyCollection)
+  // 创建任务组
+  router.post('/list/createTask', controller.home.createTask)
+  // 查询任务组
+  router.get('/list/getTask', controller.home.queryTask)
+  // 删除 epic
+  router.post('/list/deleteTask', controller.home.deleteTask)
+  // kanbanGroup
+  router.post('/list/createKanbanColumn', controller.home.createKanbanColumn)
+  router.post('/list/deleteKanbanColumn', controller.home.deleteKanbanColumn)
+  // kanbanItem
+  router.post('/list/createKanbanItem', controller.home.createKanbanItem)
+  router.post('/list/updateKanbanItem', controller.home.updateKanbanItem)
+  router.post('/list/deleteKanbanItem', controller.home.deleteKanbanItem)
+  // 获取 kanban 列表
+  router.get('/list/getKanbanList', controller.home.getKanbanList)
 };

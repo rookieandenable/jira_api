@@ -74,6 +74,125 @@ class HomeController extends Controller {
       data: {}
     }
   }
+
+  // 创建任务组
+  async createTask() {
+    const { ctx } = this
+
+    await ctx.service.home.createEpic()
+    ctx.body = {
+      code: 200,
+      msg: '新建成功',
+      data: {}
+    }
+  }
+
+  // 获取任务组
+  async queryTask() {
+    const { ctx } = this
+
+    const list = await ctx.service.home.getEpicByProjectId()
+    for (const item of list) {
+      item.created = dayjs(item.created).format('YYYY-MM-DD')
+      item.end = dayjs(item.end).format('YYYY-MM-DD')
+    }
+
+    ctx.body = {
+      code: 200,
+      msg: '',
+      data: list
+    }
+  }
+
+  // 删除一项 epic
+  async deleteTask() {
+    const { ctx } = this
+
+    const res = await ctx.service.home.deleteEpicItem()
+    ctx.body = {
+      code: 200,
+      msg: `删除 ${res?.name} 成功`,
+      data: {}
+    }
+  }
+
+  // 创建 看板column
+  async createKanbanColumn() {
+    const { ctx } = this
+
+    await ctx.service.home.createKanbansGroup()
+
+    ctx.body = {
+      code: 200,
+      msg: '创建看板 column 成功',
+      data: {}
+    }
+  }
+
+  // 删除 看板column
+  async deleteKanbanColumn() {
+    const { ctx } = this
+
+    await ctx.service.home.deleteKanbansGroup()
+
+    ctx.body = {
+      code: 200,
+      msg: '删除看板 column 成功',
+      data: {}
+    }
+  }
+
+  // 创建 看板
+  async createKanbanItem() {
+    const { ctx } = this
+
+    await ctx.service.home.createKanban()
+
+    ctx.body = {
+      code: 200,
+      msg: '创建看板成功',
+      data: {}
+    }
+  }
+
+  // 修改 看板
+  async updateKanbanItem() {
+    const { ctx } = this
+
+    await ctx.service.home.updateKanban()
+
+    ctx.body = {
+      code: 200,
+      msg: '修改看板成功',
+      data: {}
+    }
+  }
+
+  // 删除 看板
+  async deleteKanbanItem() {
+    const { ctx } = this
+
+    await ctx.service.home.deleteKanban()
+
+    ctx.body = {
+      code: 200,
+      msg: '删除看板成功',
+      data: {}
+    }
+  }
+
+  // 获取看板列表
+  async getKanbanList() {
+    const { ctx } = this
+
+    const res = await ctx.service.home.getKanbansList()
+
+    ctx.body = {
+      code: 200,
+      msg: '',
+      data: res || []
+    }
+  }
 }
 
 module.exports = HomeController;

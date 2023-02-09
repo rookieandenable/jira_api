@@ -4,6 +4,9 @@ module.exports = app => {
  
   const CounterSchema = new Schema({
     projectsId: { type: Number  },
+    epicsId: { type: Number },
+    kanbanGroupId: { type: Number },
+    kanbanId: { type: Number },
   });
  
   return mongoose.model('counter', CounterSchema, 'counter')
