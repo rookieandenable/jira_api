@@ -113,10 +113,12 @@ class HomeServer extends Server {
     const { name, projectId } = ctx.request.body
 
     const { kanbanGroupId: id } = await ctx.model.Counter.findOneAndUpdate({}, { $inc: { kanbanGroupId: 1 } }, { new: true })
+    const res = await ctx.model.Kanbans.find().sort({sort: -1}).skip(0).limit(1)
     const new_kanbanGroup = new ctx.model.Kanbans({
       name,
       projectId,
-      id
+      id,
+      sort: ++res[0].sort,
     })
     await new_kanbanGroup.save()
   }
@@ -185,9 +187,56 @@ class HomeServer extends Server {
     const { ctx } = this
     const { projectId } = ctx.request.query
     
-    const list = await ctx.model.Kanbans.find({ projectId }, '-_id -__v -children._id -children.created')
+    const list = await ctx.model.Kanbans.find({ projectId }, '-_id -__v -children._id -children.created', { lean: true })
 
     return list
+  }
+
+  // 看板拖动交换 COLUMN
+  async moveColumn() {
+    const { ctx } = this
+    const { sourceIndex, destinationIndex, draggableId } = ctx.request.body
+    if (sourceIndex !== destinationIndex) {
+      await ctx.model.Kanbans.updateOne(
+        { sort: destinationIndex },
+        { sort: sourceIndex }
+      )
+      await ctx.model.Kanbans.updateOne(
+        { id: draggableId },
+        { sort: destinationIndex }
+      )
+    }
+  }
+
+  // 看板拖动交换 Row
+  async moveRow() {
+    const { ctx } = this
+    const { sourceIndex, destinationIndex, dropColumnSourceId, dropColumnDestinationId, drapRowsourceId } = ctx.request.body
+    
+    if (sourceIndex !== destinationIndex && dropColumnSourceId === dropColumnDestinationId) {
+      await ctx.model.Kanbans.updateOne(
+        { 
+          id: dropColumnDestinationId,
+          'children.sort': destinationIndex
+        },
+        { 
+          $set: {
+            'children.$.sort': sourceIndex
+          }
+        }
+      )
+      await ctx.model.Kanbans.updateOne(
+        { 
+          id: dropColumnSourceId,
+          'children.id': drapRowsourceId
+        },
+        { 
+          $set: {
+            'children.$.sort': destinationIndex
+          }
+        }
+      )
+    }
   }
 }
 

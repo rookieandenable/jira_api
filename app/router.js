@@ -38,4 +38,7 @@ module.exports = app => {
   router.post('/list/deleteKanbanItem', controller.home.deleteKanbanItem)
   // 获取 kanban 列表
   router.get('/list/getKanbanList', controller.home.getKanbanList)
+
+  router.post('/list/moveColumn', controller.home.toMoveColumn)
+  router.post('/list/moveRow', controller.home.toMoveRow)
 };

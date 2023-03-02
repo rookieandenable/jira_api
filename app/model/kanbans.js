@@ -7,6 +7,7 @@ module.exports = app => {
       type: Number
     },
     name: { type: String },
+    sort: { type: Number },
     projectId: { type: Number },
     children: {
       type: [{
@@ -15,6 +16,7 @@ module.exports = app => {
           default: Date.now()
         },
         id: { type: Number },
+        sort: { type: Number },
         name: { type: String },
         typeId: { type: Number }
       }],

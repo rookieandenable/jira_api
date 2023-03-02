@@ -124,7 +124,7 @@ class HomeController extends Controller {
 
     ctx.body = {
       code: 200,
-      msg: '创建看板 column 成功',
+      msg: '创建成功',
       data: {}
     }
   }
@@ -137,7 +137,7 @@ class HomeController extends Controller {
 
     ctx.body = {
       code: 200,
-      msg: '删除看板 column 成功',
+      msg: '删除成功',
       data: {}
     }
   }
@@ -187,10 +187,41 @@ class HomeController extends Controller {
 
     const res = await ctx.service.home.getKanbansList()
 
+    for (const item of res) {
+      item.children.sort((a, b) => a.sort - b.sort)
+    }
+    res.sort((a, b) => a.sort - b.sort)
+
     ctx.body = {
       code: 200,
       msg: '',
       data: res || []
+    }
+  }
+
+  // move COLUMN
+  async toMoveColumn() {
+    const { ctx } = this
+
+    await ctx.service.home.moveColumn()
+
+    ctx.body = {
+      code: 200,
+      msg: '',
+      data: []
+    }
+  }
+
+  // move ROW
+  async toMoveRow() {
+    const { ctx } = this
+
+    await ctx.service.home.moveRow()
+
+    ctx.body = {
+      code: 200,
+      msg: '',
+      data: []
     }
   }
 }
