@@ -24,7 +24,7 @@ module.exports = appInfo => {
   };
 
   config.mongoose = {
-    url: 'mongodb://127.0.0.1/jira',
+    url: `mongodb://username:123456@81.69.30.202:27017/jira`,
     options: {},
     plugins: []
   }
