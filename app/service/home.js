@@ -118,7 +118,7 @@ class HomeServer extends Server {
       name,
       projectId,
       id,
-      sort: ++res[0].sort,
+      sort: res.length ? ++res[0].sort : 0,
     })
     await new_kanbanGroup.save()
   }
@@ -132,18 +132,21 @@ class HomeServer extends Server {
 
   }
 
-  // 创建 kanban
+  // 创建 kanban item
   async createKanban() {
     const { ctx } = this
     const { name, typeId, id } = ctx.request.body
 
     const { kanbanId } = await ctx.model.Counter.findOneAndUpdate({}, { $inc: { kanbanId: 1 } }, { new: true })
+    const res = await ctx.model.Kanbans.find({ id })
+    const sortArr = res[0].children.sort((a, b) => b.sort - a.sort)
     await ctx.model.Kanbans.updateOne({ id }, {
       $push: {
         children: {
           name,
           typeId,
-          id: kanbanId
+          id: kanbanId,
+          sort: sortArr.length ? sortArr[0].sort + 1 : 0,
         }
       }
     })
